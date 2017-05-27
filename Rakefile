@@ -17,7 +17,7 @@ task :install do
     "irb/*"
   ]))
 
-  install_prereqs
+#  install_prereqs
 
   install_fonts
 
@@ -25,7 +25,7 @@ task :install do
 
   install_zsh_syntax_highlighting
 
-  change_shell
+#  change_shell
 end
 
 private

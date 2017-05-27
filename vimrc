@@ -1,3 +1,7 @@
+scriptencoding utf-8
+set encoding=utf-8
+set fileencoding=utf-8
+
 " Leader
 let mapleader = " "
 
@@ -5,7 +9,7 @@ set backspace=2   " Backspace deletes like most programs in insert mode
 set nobackup
 set nowritebackup
 set noswapfile    " http://robots.thoughtbot.com/post/18739402579/global-gitignore#comment-458413287
-set history=1000  " a lot of history
+set history=5000  " a lot of history
 set ruler         " show the cursor position all the time
 set hlsearch
 set showcmd       " display incomplete commands
@@ -68,7 +72,8 @@ set shiftround
 set expandtab
 
 " Display extra whitespace
-set list listchars=tab:»·,trail:·,nbsp:·
+set showbreak=↪\
+set list listchars=tab:»·,trail:•,nbsp:␣,extends:→,precedes:←,eol:↲
 
 " Use The Silver Searcher https://github.com/ggreer/the_silver_searcher
 if executable('ag')
@@ -161,3 +166,9 @@ endif
 if filereadable($HOME . "/.vimrc.local")
   source ~/.vimrc.local
 endif
+autocmd BufWritePre * :%s/\s\+$//e
+" disable arrow keys
+" nnoremap <Left> :echoe “nao pode, use h”<CR>
+" nnoremap <Down> :echoe “nao pode, use j”<CR>
+" nnoremap <Up> :echoe “nao pode, use k”<CR>
+" nnoremap <Right> :echoe “nao pode, use l”<CR>
