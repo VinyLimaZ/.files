@@ -73,8 +73,8 @@ set expandtab
 
 " Display extra whitespace
 set showbreak=↪\
-set list listchars=tab:»·,trail:•,nbsp:␣,extends:→,precedes:←,eol:↲
-
+set list listchars=tab:»·,trail:•,extends:→,precedes:←
+" nbsp:␣,
 " Use The Silver Searcher https://github.com/ggreer/the_silver_searcher
 if executable('ag')
   " Use Ag over Grep

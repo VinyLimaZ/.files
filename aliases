@@ -41,10 +41,10 @@ alias ar='source $ccdf/aliases'  #alias reload
 
 # vim using
 mvim --version > /dev/null 2>&1
-MACVIM_INSTALLED=$?
-if [ $MACVIM_INSTALLED -eq 0 ]; then
-  alias vim="mvim -v"
-fi
+#MACVIM_INSTALLED=$?
+#if [ $MACVIM_INSTALLED -eq 0 ]; then
+#  alias vim="mvim -v"
+#fi
 
 # mimic vim functions
 alias :q='exit'
@@ -143,6 +143,7 @@ alias gi='gem install --no-ri --no-rdoc'
 # Forward port 80 to 3000
 alias portforward='sudo ipfw add 1000 forward 127.0.0.1,3000 ip from any to any 80 in'
 
+alias rdb='rake db:'
 alias rdm='rake db:migrate'
 alias rdr='rake db:rollback'
 alias rdmr='rake db:migrate:redo'
@@ -166,3 +167,13 @@ alias brewu='brew update && brew upgrade && brew cleanup && brew prune && brew d
 [[ -f ~/.aliases.local ]] && source ~/.aliases.local
 
 # vim: ft=zsh
+
+#Vim as alternative pager
+alias less='/usr/share/vim/vim80/macros/less.sh'
+
+#docker-compose
+alias dcr='docker-compose run --rm --service-ports'
+alias dcrwb='docker-compose run --rm --service-ports web bash'
+alias up='cd ..'
+alias dcup='docker-compose up'
+
