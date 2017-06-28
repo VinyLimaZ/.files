@@ -68,3 +68,5 @@ TERM=screen-256color
 
 # Your secrets env var
 [[ -f ~/.secrets ]] && source ~/.secrets
+
+setopt interactivecomments
