@@ -13,7 +13,7 @@
 [alias]
   # add
   a = add                           # add
-  chunkyadd = add --patch           # stage commits chunk by chunk
+  ap = add --patch           # stage commits chunk by chunk
 
   # via http://blog.apiaxle.com/post/handy-git-tips-to-stop-you-getting-fired/
   snapshot = !git stash save "snapshot: $(date)" && git stash apply "stash@{0}"
@@ -27,10 +27,8 @@
 
   # commit
   c = commit --verbose              # commit
-  ca = commit -a                    # commit all
+  ca = commit --amend            # ammend your last commit
   cm = commit -m                    # commit with message
-  cam = commit -am                  # commit all with message
-  amend = commit --amend            # ammend your last commit
   ammend = commit --amend           # ammend your last commit
 
   # checkout
@@ -42,6 +40,7 @@
 
   # diff
   d = diff                          # diff unstaged changes
+  ds = diff --staged                # diff staged changes
   dc = diff --cached                # diff staged changes
   last = diff HEAD^                 # diff last committed change
 
