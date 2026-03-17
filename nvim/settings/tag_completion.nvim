@@ -1,0 +1,12 @@
+""function! g:utils#manualTagComplete() abort
+""  if pumvisible()
+""    return g:deoplete#mappings#close_popup()
+""  else
+""    return g:deoplete#mappings#manual_complete('tag')
+""  endif
+""endfunction
+""
+""" Use omni complete source as default
+""function! g:utils#useOmniTabWrapper() abort
+""  inoremap <buffer> <expr> <TAB> utils#insertTabOmniWrapper()
+""endfunction

@@ -7,6 +7,9 @@ if has('vim_starting')
   set nocompatible               " Be iMproved
 endif
 
+let g:python_host_prog  = '/usr/bin/python2.7'
+let g:python3_host_prog  = '/usr/local/bin/python3'
+
 let vimplug_exists=expand('~/.config/nvim/autoload/plug.vim')
 
 let g:vim_bootstrap_langs = "elixir,html,javascript,ruby"
@@ -31,8 +34,16 @@ call plug#begin(expand('~/.config/nvim/plugged'))
 "*****************************************************************************
 "" Plug install packages
 "*****************************************************************************
+Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'scrooloose/nerdtree'
 Plug 'jistr/vim-nerdtree-tabs'
+"Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
+"Plug 'ryanoasis/vim-devicons'
+"Plug 'adelarsq/vim-emoji-icon-theme'
+"Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+"Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
+"Plug 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
+Plug 'chrisbra/Colorizer'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline'
@@ -43,12 +54,33 @@ Plug 'vim-scripts/CSApprox'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'Raimondi/delimitMate'
 Plug 'majutsushi/tagbar'
-Plug 'scrooloose/syntastic'
-Plug 'Yggdroot/indentLine'
+"Plug 'Yggdroot/indentLine'
 Plug 'avelino/vim-bootstrap-updater'
 Plug 'sheerun/vim-polyglot'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'neomake/neomake'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'w0rp/ale'
+Plug 'neovim/nvim-lspconfig'
+Plug 'kabouzeid/nvim-lspinstall'
+
+" LSP base
+Plug 'neovim/nvim-lspconfig'
+
+" Mason (instalador de LSP)
+Plug 'williamboman/mason.nvim'
+Plug 'williamboman/mason-lspconfig.nvim'
+
+" Autocomplete
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+
+" Snippets (opcional mas recomendado)
+Plug 'L3MON4D3/LuaSnip'
+Plug 'saadparwaiz1/cmp_luasnip'
 
 let g:make = 'gmake'
 if exists('make')
@@ -64,10 +96,10 @@ if v:version >= 703
   Plug 'Shougo/vimshell.vim'
 endif
 
-if v:version >= 704
-  "" Snippets
-  Plug 'SirVer/ultisnips'
-endif
+"if v:version >= 704
+"  "" Snippets
+"  Plug 'SirVer/ultisnips'
+"endif
 
 Plug 'honza/vim-snippets'
 
@@ -82,14 +114,12 @@ Plug 'tomasr/molokai'
 Plug 'elixir-lang/vim-elixir'
 Plug 'carlosgaldino/elixir-snippets'
 
-
 " html
 "" HTML Bundle
 Plug 'hail2u/vim-css3-syntax'
 Plug 'gorodinskiy/vim-coloresque'
 Plug 'tpope/vim-haml'
 Plug 'mattn/emmet-vim'
-
 
 " javascript
 "" Javascript Bundle
@@ -103,7 +133,21 @@ Plug 'keith/rspec.vim'
 Plug 'tpope/vim-projectionist'
 Plug 'thoughtbot/vim-rspec'
 Plug 'ecomba/vim-ruby-refactoring'
-
+"Plug 'hwartig/vim-seeing-is-believing'
+" {{{
+"  augroup seeingIsBelievingSettings
+"    autocmd!
+"
+"    autocmd FileType ruby nmap <buffer> <Enter> <Plug>(seeing-is-believing-mark-and-run)
+"
+"    autocmd FileType ruby nmap <buffer> gz <Plug>(seeing-is-believing-mark)
+"    autocmd FileType ruby xmap <buffer> gz <Plug>(seeing-is-believing-mark)
+"    autocmd FileType ruby imap <buffer> gz <Plug>(seeing-is-believing-mark)
+"
+"    autocmd FileType ruby nmap <buffer> gZ <Plug>(seeing-is-believing-run)
+"  augroup END
+" }}}
+"
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'skwp/vim-colors-solarized'
 Plug 'ctrlpvim/ctrlp.vim' " fuzzy finder
@@ -120,6 +164,17 @@ Plug 'christoomey/vim-tmux-runner'
 Plug 'godlygeek/tabular'
 Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-repeat'
+
+Plug 'williamboman/mason.nvim'
+Plug 'williamboman/mason-lspconfig.nvim'
+Plug 'neovim/nvim-lspconfig'
+"Plug 'nvim-lua/plenary.nvim'
+"Plug 'BurntSushi/ripgrep'
+"Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+"Plug 'junegunn/fzf.vim'
+"Plug 'nvim-telescope/telescope.nvim'
+"Plug 'frankroeder/parrot.nvim'
+
 "*****************************************************************************
 "*****************************************************************************
 
@@ -132,8 +187,10 @@ call plug#end()
 
 " Required:
 filetype plugin indent on
+autocmd VimEnter * :IBLEnable
 
-
+" Defina o 'wrap' para determinados tipos de arquivos
+autocmd FileType markdown,text setlocal wrap
 "*****************************************************************************
 "" Basic Setup
 "*****************************************************************************"
@@ -190,7 +247,7 @@ let g:session_command_aliases = 1
 syntax on
 set ruler
 set number
-
+set background=dark
 let no_buffers_menu=1
 if !exists('g:not_finish_vimplug')
   colorscheme molokai
@@ -198,7 +255,6 @@ endif
 
 set mousemodel=popup
 set t_Co=256
-set guioptions=egmrti
 set gfn=Monospace\ 10
 
 if has("gui_running")
@@ -209,11 +265,11 @@ if has("gui_running")
 else
   let g:CSApprox_loaded = 1
 
-  " IndentLine
-  let g:indentLine_enabled = 1
-  let g:indentLine_concealcursor = 0
-  let g:indentLine_char = '┆'
-  let g:indentLine_faster = 1
+"  " IndentLine
+"  let g:indentLine_enabled = 1
+"  let g:indentLine_concealcursor = 0
+"  let g:indentLine_char = '┆'
+"  let g:indentLine_faster = 1
 
 
 endif
@@ -252,6 +308,9 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tagbar#enabled = 1
 let g:airline_skip_empty_sections = 1
 
+" Colorizer
+let g:colorizer_auto_filetype='sass,scss,css,html,js'
+
 "*****************************************************************************
 "" Abbreviations
 "*****************************************************************************
@@ -267,6 +326,7 @@ cnoreabbrev W w
 cnoreabbrev Q q
 cnoreabbrev Qall qall
 
+
 "" NERDTree configuration
 let g:NERDTreeChDirMode=2
 let g:NERDTreeIgnore=['\.rbc$', '\~$', '\.pyc$', '\.db$', '\.sqlite$', '__pycache__']
@@ -277,6 +337,9 @@ let g:NERDTreeMapOpenInTabSilent = '<RightMouse>'
 let g:NERDTreeWinSize = 30
 nnoremap <silent> <F2> :NERDTreeFind<CR>
 nnoremap <silent> <Tab> :NERDTreeToggle<CR>
+
+" CHADTree configuration
+"nnoremap <silent> <Tab> :CHADopen<CR>
 
 " grep.vim
 nnoremap <silent> <leader>f :Rgrep<CR>
@@ -379,37 +442,37 @@ set wildmode=list:longest,list:full
 let $FZF_DEFAULT_COMMAND =  "find * -path '*/\.*' -prune -o -path 'node_modules/**' -prune -o -path 'target/**' -prune -o -path 'dist/**' -prune -o  -type f -print -o -type l -print 2> /dev/null"
 
 " The Silver Searcher
-"if executable('ag')
-"  let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -g ""'
-"  set grepprg=ag\ --nogroup\ --nocolor
-"endif
+if executable('ag')
+  let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git node_modules -g ""'
+  set grepprg=ag\ --nogroup\ --nocolor
+endif
 "
 "" ripgrep
-"if executable('rg')
-"  let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --follow --glob "!.git/*"'
-"  set grepprg=rg\ --vimgrep
-"  command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
-"endif
+if executable('rg')
+  let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --follow --glob "!.git/*"'
+  set grepprg=rg\ --vimgrep
+  command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
+endif
 
 cnoremap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
 nnoremap <silent> <leader>b :Buffers<CR>
 nnoremap <silent> <leader>e :FZF -m<CR>
 
 " snippets
-"let g:UltiSnipsExpandTrigger="<tab>"
-"let g:UltiSnipsJumpForwardTrigger="<tab>"
+"let g:UltiSnipsExpandTrigger="<Tab>"
+"let g:UltiSnipsJumpForwardTrigger="<Tab>"
 "let g:UltiSnipsJumpBackwardTrigger="<c-b>"
 "let g:UltiSnipsEditSplit="vertical"
 
 " syntastic
-let g:syntastic_always_populate_loc_list=0
-let g:syntastic_error_symbol='✗'
-let g:syntastic_warning_symbol='⚠'
-let g:syntastic_style_error_symbol = '✗'
-let g:syntastic_style_warning_symbol = '⚠'
-let g:syntastic_auto_loc_list=1
-let g:syntastic_aggregate_errors = 1
-let g:syntastic_quiet_messages = { "level": ["warnings", "errors"] }
+"let g:syntastic_always_populate_loc_list=0
+"let g:syntastic_error_symbol='✗'
+"let g:syntastic_warning_symbol='⚠'
+"let g:syntastic_style_error_symbol = '✗'
+"let g:syntastic_style_warning_symbol = '⚠'
+"let g:syntastic_auto_loc_list=1
+"let g:syntastic_aggregate_errors = 1
+"let g:syntastic_quiet_messages = { "level": ["warnings", "errors"] }
 
 " Tagbar
 nmap <silent> <F4> :TagbarToggle<CR>
@@ -465,6 +528,21 @@ vnoremap K :m '<-2<CR>gv=gv
 "" Open current line on GitHub
 nnoremap <Leader>o :.Gbrowse<CR>
 
+function! MyOnBattery()
+  if has('macunix')
+    return match(system('pmset -g batt'), "Now drawing from 'Battery Power'") != -1
+  elsif has('unix')
+    return readfile('/sys/class/power_supply/AC/online') == ['0']
+  endif
+  return 0
+endfunction
+
+if MyOnBattery()
+  call neomake#configure#automake('w')
+else
+  call neomake#configure#automake('nrwi', 1000)
+endif
+
 "*****************************************************************************
 "" Custom configs
 "*****************************************************************************
@@ -472,8 +550,8 @@ nnoremap <Leader>o :.Gbrowse<CR>
 " fzf
 let g:rg_command = '
   \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always"
-  \ -g "*.{js,json,php,md,styl,jade,html,config,py,cpp,c,go,hs,rb,conf}"
-  \ -g "!{.git,node_modules,vendor,log,public,tmp,temp}/*" '
+  \ -g "!{.git,node_modules,vendor,log,public,tmp,temp}/*"
+  \ -g "*.{php,styl,html,config,py,cpp,c,go,hs,rb,conf}" '
 
 command! -bang -nargs=* F call fzf#vim#grep(g:rg_command .shellescape(<q-args>), 1, <bang>0)
 
@@ -487,10 +565,30 @@ autocmd Filetype html setlocal ts=2 sw=2 expandtab
 " javascript
 let g:javascript_enable_domhtmlcss = 1
 
+let g:ale_sign_error = '❌'
+let g:ale_sign_warning = '⚠️'
+
+let g:jsx_ext_required = 0
+let g:ale_linters = {
+\   'javascript': ['standard'],
+\}
+let g:ale_fixers = {
+\   'javascript': ['prettier', 'eslint'],
+\   '*': ['remove_trailing_lines', 'trim_whitespace'],
+\}
+let g:ale_lint_on_enter = 0
+let g:ale_lint_on_text_changed = 'never'
+highlight ALEErrorSign ctermbg=NONE ctermfg=red
+highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
+let g:ale_linters_explicit = 1
+let g:ale_lint_on_save = 1
+let g:ale_fix_on_save = 1
+let g:ale_javascript_prettier_options = '--no-semi --single-quote --trailing-comma none'
+
 " vim-javascript
 augroup vimrc-javascript
   autocmd!
-  autocmd FileType javascript set tabstop=4|set shiftwidth=4|set expandtab softtabstop=4
+  autocmd FileType javascript set tabstop=2|set shiftwidth=2|set expandtab softtabstop=2
 augroup END
 
 
@@ -626,7 +724,7 @@ augroup vimrcEx
   autocmd FileType markdown setlocal spell
 
   " Automatically wrap at 80 characters for Markdown
-  autocmd BufRead,BufNewFile *.md setlocal textwidth=80
+  autocmd BufRead,BufNewFile *.md setlocal textwidth=110
 
   " Automatically wrap at 72 characters and spell check git commit messages
   autocmd FileType gitcommit setlocal textwidth=72
@@ -678,7 +776,56 @@ if is_tmux != ""
 endif
 
 " remove space char at the end of line
-autocmd BufWritePre * :%s/\s\+$//e
+autocmd BufWritePre :call TrimWhitespace()
+
+fun! TrimWhitespace()
+    let l:save = winsaveview()
+    keeppatterns %s/\s\+$//e
+    keeppatterns %s/\n\+$/\r/e
+
+    call winrestview(l:save)
+endfun
+
+
 :hi MatchParen cterm=bold ctermbg=none ctermfg=yellow
 :hi CursorParen cterm=bold ctermbg=white ctermfg=green
 "/legacy configs
+"
+"
+" -----------------------------------------------------
+" 4.10 Deoplete autocomplete settings {{{
+" -----------------------------------------------------
+"let g:deoplete#enable_at_startup=1
+"let g:deoplete#enable_refresh_always=0
+"let g:deoplete#enable_smart_case=1
+"let g:deoplete#custom#var()
+"
+"let g:deoplete#sources={}
+"let g:deoplete#sources._    = ['around', 'buffer', 'file', 'ultisnips']
+"let g:deoplete#sources.ruby = ['around', 'buffer', 'member', 'file', 'ultisnips']
+"let g:deoplete#sources.vim  = ['around', 'buffer', 'member', 'file', 'ultisnips']
+"let g:deoplete#sources['javascript.jsx'] = ['around', 'buffer', 'file', 'ultisnips', 'ternjs']
+"let g:deoplete#sources.css  = ['around', 'buffer', 'member', 'file', 'omni', 'ultisnips']
+"let g:deoplete#sources.scss = ['around', 'buffer', 'member', 'file', 'omni', 'ultisnips']
+"let g:deoplete#sources.html = ['around', 'buffer', 'member', 'file', 'omni', 'ultisnips']
+"}}}
+
+" -----------------------------------------------------
+" 4.4 Ultisnips settings {{{
+" -----------------------------------------------------
+"let g:UltiSnipsUsePythonVersion=3
+""}}}
+"" Search in ultisnips [s]nippets
+"nnoremap <silent> <leader>s :Snippets<CR>
+
+" -----------------------------------------------------
+" 5.2 Ultisnips {{{
+" -----------------------------------------------------
+" Disable built-in cx-ck to be able to go backward
+"inoremap <C-x><C-k> <NOP>
+"let g:UltiSnipsExpandTrigger='<C-j>'
+"let g:UltiSnipsListSnippets='<C-s>'
+"let g:UltiSnipsJumpForwardTrigger='<C-j>'
+"let g:UltiSnipsJumpBackwardTrigger='<C-k>'
+"}}
+:set list lcs=tab:\|\
